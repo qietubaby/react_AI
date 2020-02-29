@@ -1,0 +1,48 @@
+
+.fl{
+    float: left; margin-right: 40px; box-shadow: 0 0 5px rgba(0,0,0, .2); position: relative;
+    width: 760px; height: 500px; overflow: auto;
+}
+
+.stageContainer{
+    position: relative; width: 760px; height: 500px; overflow: auto;
+}
+
+.closedPrompt{
+    width: 230px;
+    height: 200px;
+    position: absolute; /*top: 120px; left: 100px;*/
+    padding: 20px;
+    border:1px solid #333;
+    background: rgba(255,255,255,1);
+    input, textarea{
+        border: none;
+        outline: none;
+        margin-bottom: 10px;
+        width: 100%;
+        background-color: #eaf0f4;
+        padding: 8px 10px;
+    }
+    textarea{
+        resize: none;
+        height: 80px;
+    }
+    input{
+        height: 30px;
+    }
+    button{
+        border: none;
+        background-color: #00a0d6;
+        margin-right: 5px;
+        width: 55px;
+        color: #fff;
+        &:last-child{
+            width: 68px;
+            margin-right: 0;
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #00a0d6;
+        }
+    }
+
+}

@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import './common/style/main.scss';
+import './style.scss'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+import Board from './components/drawingBoard/Board';
+import PhotoGallery from './components/photoGallery/PhotoGallery';
+import ToolBox from './components/toolBox/ToolBox';
+import LayerManager from './components/layerManager/LayerManager';
+
+
+class App extends Component {
+  render() {
+    return (
+      <div className="gridWrap">
+        <div className="topRow">
+          <div className="logo">
+            <div className="imgWrap">
+              <a href="http://art.microbu.com"><img src={require("./common/img/logo.png")} alt="miaov.com" /></a>
+            </div>
+          </div>
+          <div className="gallery">
+            <PhotoGallery />
+          </div>
+        </div>
+        <div className="bottomRow">
+          <div className="tool">
+            <ToolBox />
+          </div>
+          <div className="board">
+            <Board />
+            <LayerManager />
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
-export default App;
+export default App

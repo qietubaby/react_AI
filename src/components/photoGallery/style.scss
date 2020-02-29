@@ -1,0 +1,10 @@
+
+
+.container{ min-width: 800px; padding-top: 16px;
+    .button{ margin: 0; vertical-align: middle; box-shadow: none !important;}
+    .listWrap{ margin: 0 10px; vertical-align: middle;}
+    .imgWrap{ height: 66px; padding: 0 !important; overflow: hidden; vertical-align: middle;
+        &.active{ border: 3px solid #00a4ed; }
+        .img{ height: 100% !important; vertical-align: middle; }
+    }
+}
