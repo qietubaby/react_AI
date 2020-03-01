@@ -17,5 +17,17 @@ export const addTempLayer = (curtPhotoID) => ({
  curtPhotoID
 })
 
+export const addSpot = (x, y) => (dispatch, getState) => {
+ let curtPhotoID = getState().photos.curtPhoto.id
+ let { curtLayerID } = getState().board.layersData[curtPhotoID]
+ dispatch({
+  type: actionTypes.ADD_SPOT,
+  curtPhotoID,
+  pointX: x,
+  pointY: y,
+  curtLayerID
+ })
+}
+
 
 
