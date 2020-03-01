@@ -7,37 +7,23 @@ import './style.scss';
 class Board extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            image: null
-        }
+
         this.stageWidth = 760;
         this.stageHeight = 500;
     }
 
     componentWillReceiveProps(nProp) {
-        this.loadImage(nProp.curtPhoto.src)
-    }
-
-    loadImage(url) {
-        let imgObj = new window.Image();
-        imgObj.onload = () => {
-            this.setState({
-                image: imgObj
-            })
-        }
-        imgObj.src = url;
 
     }
 
     render() {
         let { stageWidth, stageHeight } = this;
-        let { image } = this.state;
-        let iamgeBodyInfo = null;
-        if (image) {
-            let { width: imgWidth, height: imgHeight } = image;
-            iamgeBodyInfo = getDrewImageBodyInfo(imgWidth, imgHeight, stageWidth, stageHeight)
+        let { drewImage } = this.props;
+        let imageBodyInfo = null;
+        if (drewImage) {
+            let { width: imgWidth, height: imgHeight } = drewImage;
+            imageBodyInfo = getDrewImageBodyInfo(imgWidth, imgHeight, stageWidth, stageHeight)
         }
-
         return (
             <div className="fl" >
                 <Stage
@@ -46,14 +32,14 @@ class Board extends Component {
                 >
                     <Layer>
                         {
-                            image ? (
+                            drewImage ? (
                                 <Image
                                     {...{
-                                        width: iamgeBodyInfo.w,
-                                        height: iamgeBodyInfo.h,
-                                        x: iamgeBodyInfo.x,
-                                        y: iamgeBodyInfo.y,
-                                        image
+                                        width: imageBodyInfo.w,
+                                        height: imageBodyInfo.h,
+                                        x: imageBodyInfo.x,
+                                        y: imageBodyInfo.y,
+                                        image: drewImage
                                     }}
                                 />
                             ) : null
@@ -69,9 +55,10 @@ class Board extends Component {
 }
 
 const mapStateToProps = (state) => {
-
-    let { curtPhoto } = state.photos;
-    return { curtPhoto }
+    let { drewImage } = state.board;
+    return {
+        drewImage
+    }
 }
 
 export default connect(

@@ -1,0 +1,1 @@
+export const DREW_IMAGE = 'DREW_IMAGE/label-case/Board';

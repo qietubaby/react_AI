@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { Button, List, Container } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import './style.scss';
-import { actionCreators } from './store';
 import Img from './Img';
+import { actionCreators } from './store';
 import { switchPhoto } from './store/actionCreators';
+
 
 class PhotoGallery extends Component {
     componentDidMount() {
@@ -53,6 +54,8 @@ const mapStateToProps = (state) => {
     }
 }
 
+
+
 const mapDispatchToProps = (dispatch) => {
     return {
         loadImage(curtPhoto) {
@@ -65,8 +68,12 @@ const mapDispatchToProps = (dispatch) => {
             }
         },
         switchPhoto(photo) {
+            console.log(55555555, photo)
             const action = actionCreators.switchPhoto(photo)
             dispatch(action)
+
+            // 向画布中画大图片
+
         },
         nextPhoto(imgData, curtPhoto) {
             let { id } = curtPhoto
@@ -83,7 +90,8 @@ const mapDispatchToProps = (dispatch) => {
                     dispatch(switchPhoto(arr[i - 1]))
                 }
             })
-        }
+        },
+
     }
 }
 
