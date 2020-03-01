@@ -3,7 +3,6 @@ export const drewImage = (url) => {
  return (dispatch) => {
   let imgObj = new window.Image();
   imgObj.onload = () => {
-
    dispatch({
     type: actionTypes.DREW_IMAGE,
     imgObj
@@ -12,3 +11,11 @@ export const drewImage = (url) => {
   imgObj.src = url;
  }
 }
+
+export const addTempLayer = (curtPhotoID) => ({
+ type: actionTypes.ADD_TEMP_LAYER,
+ curtPhotoID
+})
+
+
+
