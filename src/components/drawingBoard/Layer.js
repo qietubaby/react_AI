@@ -6,7 +6,7 @@ export default class PaintingLayer extends Component {
 
  // }
  render() {
-  let { points, layerID, lineColor } = this.props;
+  let { points, lineColor, fixFirstSpotHit, lineClosed } = this.props;
 
   let linePoints = [];
   points.forEach(point => (
@@ -26,6 +26,8 @@ export default class PaintingLayer extends Component {
       stroke: 'black',
       strokeWidth: 3
      }}
+     onMouseOver={ev => fixFirstSpotHit(true)}
+     onMouseOut={ev => fixFirstSpotHit(false)}
     />
    )
   })
@@ -35,7 +37,9 @@ export default class PaintingLayer extends Component {
      ...{
       points: linePoints,
       stroke: lineColor,
-      strokeWidth: 4
+      strokeWidth: 4,
+      closed: lineClosed,
+      fill: lineClosed ? 'red' : null
      }
     } />
     {pointsComp}

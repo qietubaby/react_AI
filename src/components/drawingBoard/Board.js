@@ -4,14 +4,28 @@ import { Stage, Layer, Image } from 'react-konva';
 import { connect } from 'react-redux';
 import { getDrewImageBodyInfo } from '../../common/util/KonvaUtil.js';
 import './style.scss';
-import { addSpot } from './store/actionCreators.js';
+import { addSpot, closeLine, addTempLayer } from './store/actionCreators.js';
 import PaintingLayer from './Layer'
 class Board extends Component {
     constructor(props) {
         super(props);
 
+        // 第一个点有没有被碰到，用来判断是否闭合线
+        this.state = {
+            firstSpotHit: false
+        }
+
+
         this.stageWidth = 760;
         this.stageHeight = 500;
+
+        this.fixFirstSpotHit = this.fixFirstSpotHit.bind(this);
+    }
+
+    fixFirstSpotHit(hasHit) {
+        this.setState({
+            firstSpotHit: hasHit
+        })
     }
 
     getPointerPosition() {
@@ -23,8 +37,11 @@ class Board extends Component {
     }
 
     render() {
-        let { stageWidth, stageHeight } = this;
-        let { drewImage, addSpot, layersData, curtPhotoID } = this.props;
+        let { stageWidth, stageHeight, fixFirstSpotHit } = this;
+
+        let { firstSpotHit } = this.state;
+
+        let { drewImage, addSpot, layersData, curtPhotoID, AlertCloseLine, addTempLayer } = this.props;
 
         let layerGroup = layersData[curtPhotoID];
 
@@ -32,14 +49,16 @@ class Board extends Component {
 
         let { layers } = layerGroup;
         layers = layers.map(layer => {
-            let { id, points, lineColor } = layer;
+            let { id, points, lineColor, lineClosed } = layer;
             return (
                 <PaintingLayer {
                     ...{
                         key: layer.id,
                         layerID: id,
                         points,
-                        lineColor
+                        lineColor,
+                        fixFirstSpotHit,
+                        lineClosed
                     }
                 } />
             )
@@ -58,7 +77,14 @@ class Board extends Component {
                     ref="stage"
                     onMouseDown={ev => {
                         let { x, y } = this.getPointerPosition();
-                        addSpot(x, y)
+                        if (firstSpotHit) {
+                            //闭合线条并且创建新的图层
+                            AlertCloseLine(true)
+                            addTempLayer(curtPhotoID)
+                        } else {
+                            addSpot(x, y)
+                        }
+
                     }
 
                     }
@@ -102,6 +128,15 @@ const mapDispatchToProps = (dispatch) => {
     return {
         addSpot(x, y) {
             const action = addSpot(x, y)
+            dispatch(action)
+        },
+        AlertCloseLine(status) {
+            const action = closeLine(status)
+            dispatch(action)
+        }
+        ,
+        addTempLayer(curtPhotoID) {
+            const action = addTempLayer(curtPhotoID)
             dispatch(action)
         }
     }

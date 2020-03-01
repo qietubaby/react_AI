@@ -8,7 +8,7 @@ let initState = {
 }
 // reducer
 export default (state = initState, action) => {
-  const { type, imgObj, curtPhotoID, curtLayerID, pointX, pointY } = action
+  const { type, imgObj, curtPhotoID, curtLayerID, pointX, pointY, closed } = action
   let { layersData } = state;
 
   let layerGroup = {}
@@ -26,12 +26,9 @@ export default (state = initState, action) => {
 
   switch (type) {
     case actionTypes.DREW_IMAGE:
-
       return { ...state, drewImage: imgObj }
     case actionTypes.ADD_TEMP_LAYER:
-
       let tempLayerID = Math.random()
-
       return {
         ...state, layersData: {
           ...layersData,
@@ -39,7 +36,8 @@ export default (state = initState, action) => {
             layers: [...layers, {
               id: tempLayerID,
               points: [],
-              lineColor: Konva.Util.getRandomColor()
+              lineColor: Konva.Util.getRandomColor(),
+              lineClosed: false
             }],
             //当前图层的id
             curtLayerID: tempLayerID
@@ -61,6 +59,25 @@ export default (state = initState, action) => {
           [curtPhotoID]: { ...layerGroup }
         }
       }
+
+
+    case actionTypes.ALTER_CLOSE_LINE:
+
+      layers = layers.map(layer => {
+        if (layer.id === curtLayerID) {
+          layer.lineClosed = closed
+        }
+        return layer
+      })
+
+      return {
+        ...state, layersData: {
+          ...layersData,
+          [curtPhotoID]: { ...layerGroup }
+        }
+      }
+
+
     default:
       return state;
   }

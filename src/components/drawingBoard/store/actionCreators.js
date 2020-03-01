@@ -29,5 +29,20 @@ export const addSpot = (x, y) => (dispatch, getState) => {
  })
 }
 
+export const closeLine = (closed) => (dispatch, getState) => {
+
+ let curtPhotoID = getState().photos.curtPhoto.id
+ let { curtLayerID } = getState().board.layersData[curtPhotoID]
+
+ dispatch({
+  type: actionTypes.ALTER_CLOSE_LINE,
+  curtPhotoID,
+  curtLayerID,
+  closed
+ })
+
+
+}
+
 
 
