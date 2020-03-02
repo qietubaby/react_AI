@@ -8,7 +8,16 @@ let initState = {
 }
 // reducer
 export default (state = initState, action) => {
-  const { type, imgObj, curtPhotoID, curtLayerID, pointX, pointY, closed } = action
+  const {
+    type,
+    imgObj,
+    curtPhotoID,
+    curtLayerID,
+    pointX,
+    pointY,
+    closed,
+    holdingLayerID
+  } = action
   let { layersData } = state;
 
   let layerGroup = {}
@@ -40,12 +49,13 @@ export default (state = initState, action) => {
               lineClosed: false
             }],
             //当前图层的id
-            curtLayerID: tempLayerID
+            curtLayerID: tempLayerID,
+            holdingLayerID: null,
+            selectedLayerID: null
           }
         }
       }
     case actionTypes.ADD_SPOT:
-
       layers = layers.map(layer => {
         if (layer.id === curtLayerID) {
           layer.points = [...layer.points, { x: pointX, y: pointY }]
@@ -74,6 +84,15 @@ export default (state = initState, action) => {
         ...state, layersData: {
           ...layersData,
           [curtPhotoID]: { ...layerGroup }
+        }
+      }
+
+
+    case actionTypes.ALTER_LAYER_HOLD:
+      return {
+        ...state, layersData: {
+          ...layersData,
+          [curtPhotoID]: { ...layerGroup, holdingLayerID }
         }
       }
 

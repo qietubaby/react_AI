@@ -4,8 +4,9 @@ import { Stage, Layer, Image } from 'react-konva';
 import { connect } from 'react-redux';
 import { getDrewImageBodyInfo } from '../../common/util/KonvaUtil.js';
 import './style.scss';
-import { addSpot, closeLine, addTempLayer } from './store/actionCreators.js';
+import { addSpot, closeLine, addTempLayer, alterLayerHold } from './store/actionCreators.js';
 import PaintingLayer from './Layer'
+import ClosedPrompt from './ClosedPrompt';
 class Board extends Component {
     constructor(props) {
         super(props);
@@ -41,15 +42,23 @@ class Board extends Component {
 
         let { firstSpotHit } = this.state;
 
-        let { drewImage, addSpot, layersData, curtPhotoID, AlertCloseLine, addTempLayer } = this.props;
+        let { drewImage, AddSpot, layersData, curtPhotoID, AlertCloseLine, AddTempLayer, AlterLayerHold } = this.props;
 
         let layerGroup = layersData[curtPhotoID];
 
         if (!layerGroup) return null;
 
-        let { layers } = layerGroup;
+        let { layers, holdingLayerID, curtLayerID } = layerGroup;
+
+        // 得出哪个图层要被标注
+        let holdingLayer = null;
+
         layers = layers.map(layer => {
             let { id, points, lineColor, lineClosed } = layer;
+
+            if (holdingLayerID && holdingLayerID === id) holdingLayer = layer
+
+
             return (
                 <PaintingLayer {
                     ...{
@@ -63,6 +72,19 @@ class Board extends Component {
                 } />
             )
         })
+
+
+        // 计算出 ClosedPrompt 的 left 和 top
+
+        let { x: left, y: top } = holdingLayer ? holdingLayer.points[0] : { x: 0, y: 0 }
+
+
+
+        left = stageWidth - left > 240 ? left : left - 230
+        top = stageHeight - top > 210 ? top : top - 200
+
+        // end 计算出 ClosedPrompt 的 left 和 top
+
 
         let imageBodyInfo = null;
         if (drewImage) {
@@ -80,9 +102,13 @@ class Board extends Component {
                         if (firstSpotHit) {
                             //闭合线条并且创建新的图层
                             AlertCloseLine(true)
-                            addTempLayer(curtPhotoID)
+
+                            // 闭合后给这个图层添加标注
+                            AlterLayerHold(curtLayerID)
+
+                            //AddTempLayer(curtPhotoID)
                         } else {
-                            addSpot(x, y)
+                            AddSpot(x, y)
                         }
 
                     }
@@ -107,7 +133,17 @@ class Board extends Component {
                     </Layer>
                     {layers}
                 </Stage>
+                {
+                    holdingLayer ? (
+                        <ClosedPrompt {
+                            ...{
+                                left,
+                                top
+                            }
+                        } />
+                    ) : null
 
+                }
             </div>
         );
     }
@@ -126,17 +162,21 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 
     return {
-        addSpot(x, y) {
+        AddSpot(x, y) {
             const action = addSpot(x, y)
             dispatch(action)
         },
         AlertCloseLine(status) {
             const action = closeLine(status)
             dispatch(action)
-        }
-        ,
-        addTempLayer(curtPhotoID) {
+        },
+        AddTempLayer(curtPhotoID) {
             const action = addTempLayer(curtPhotoID)
+            dispatch(action)
+        },
+        AlterLayerHold(holdingLayerID) {
+            console.log('11111111', holdingLayerID)
+            const action = alterLayerHold(holdingLayerID)
             dispatch(action)
         }
     }

@@ -8,3 +8,9 @@ export const ADD_SPOT = 'ADD_SPOT/label-case/Board';
 
 // 关闭线条
 export const ALTER_CLOSE_LINE = 'CLOSE_LINE/label-case/Board';
+
+export const ALTER_LAYER_HOLD = 'ALTER_LAYER_HOLD/label-case/Board';
+
+export const EDIT_LAYER_DONE = 'EDIT_LAYER_DONE/label-case/Board';
+export const ALTER_LAYER_FILL = 'EDIT_LAYER_FILL/label-case/Board';
+export const ALTER_LAYER_SELECTED = 'EDIT_LAYER_SELECTED/label-case/Board';

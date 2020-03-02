@@ -29,6 +29,7 @@ export const addSpot = (x, y) => (dispatch, getState) => {
  })
 }
 
+// 闭合线条
 export const closeLine = (closed) => (dispatch, getState) => {
 
  let curtPhotoID = getState().photos.curtPhoto.id
@@ -40,9 +41,20 @@ export const closeLine = (closed) => (dispatch, getState) => {
   curtLayerID,
   closed
  })
-
-
 }
+
+// 添加图层标注
+export const alterLayerHold = (holdingLayerID) => (dispatch, getState) => {
+ let curtPhotoID = getState().photos.curtPhoto.id;
+
+ dispatch({
+  type: actionTypes.ALTER_LAYER_HOLD,
+  holdingLayerID,
+  curtPhotoID
+ })
+}
+
+
 
 
 
