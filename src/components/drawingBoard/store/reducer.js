@@ -16,7 +16,13 @@ export default (state = initState, action) => {
     pointX,
     pointY,
     closed,
-    holdingLayerID
+    holdingLayerID,
+    editLayerID,
+    layerName,
+    attr,
+    fillLayerID,
+    isFill,
+    selectedLayerID
   } = action
   let { layersData } = state;
 
@@ -93,6 +99,41 @@ export default (state = initState, action) => {
         ...state, layersData: {
           ...layersData,
           [curtPhotoID]: { ...layerGroup, holdingLayerID }
+        }
+      }
+
+    case actionTypes.EDIT_LAYER_DONE:
+      layers = layers.map(layer => {
+        if (layer.id === editLayerID) {
+          layer.layerName = layerName;
+          layer.attr = attr
+        }
+        return layer;
+      });
+      return {
+        ...state, layersData: {
+          ...layersData,
+          [curtPhotoID]: { ...layerGroup, layers, holdingLayerID: null }
+        }
+      }
+    case actionTypes.ALTER_LAYER_FILL:
+      layers = layers.map(layer => {
+        if (layer.id === fillLayerID) {
+          layer.fill = isFill
+        }
+        return layer
+      })
+      return {
+        ...state, layersData: {
+          ...layersData,
+          [curtPhotoID]: { ...layerGroup, layers }
+        }
+      }
+    case actionTypes.ALTER_LAYER_SELECTED:
+      return {
+        ...state, layersData: {
+          ...layersData,
+          [curtPhotoID]: { ...layerGroup, selectedLayerID }
         }
       }
 

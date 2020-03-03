@@ -54,6 +54,42 @@ export const alterLayerHold = (holdingLayerID) => (dispatch, getState) => {
  })
 }
 
+// 写入标注name和attr完成标注
+export const editLayerDone = (editLayerID, layerName, attr) => (dispatch, getState) => {
+ let curtPhotoID = getState().photos.curtPhoto.id;
+ dispatch({
+  type: actionTypes.EDIT_LAYER_DONE,
+  editLayerID,
+  curtPhotoID,
+  layerName,
+  attr
+ })
+ dispatch(addTempLayer(curtPhotoID));
+}
+
+export const alterLayerFill = (fillLayerID, isFill) => (dispatch, getState) => {
+
+ let curtPhotoID = getState().photos.curtPhoto.id;
+
+ dispatch({
+  type: actionTypes.ALTER_LAYER_FILL,
+  curtPhotoID,
+  fillLayerID,
+  isFill
+ });
+
+}
+
+export const alterLayerSelected = (selectedLayerID) => (dispatch, getState) => {
+ let curtPhotoID = getState().photos.curtPhoto.id;
+
+ dispatch({
+  type: actionTypes.ALTER_LAYER_SELECTED,
+  selectedLayerID,
+  curtPhotoID
+ });
+}
+
 
 
 

@@ -4,7 +4,15 @@ import { Stage, Layer, Image } from 'react-konva';
 import { connect } from 'react-redux';
 import { getDrewImageBodyInfo } from '../../common/util/KonvaUtil.js';
 import './style.scss';
-import { addSpot, closeLine, addTempLayer, alterLayerHold } from './store/actionCreators.js';
+import {
+    addSpot,
+    closeLine,
+    addTempLayer,
+    alterLayerHold,
+    editLayerDone,
+    alterLayerFill,
+    alterLayerSelected
+} from './store/actionCreators.js';
 import PaintingLayer from './Layer'
 import ClosedPrompt from './ClosedPrompt';
 class Board extends Component {
@@ -42,19 +50,29 @@ class Board extends Component {
 
         let { firstSpotHit } = this.state;
 
-        let { drewImage, AddSpot, layersData, curtPhotoID, AlertCloseLine, AddTempLayer, AlterLayerHold } = this.props;
+        let {
+            drewImage,
+            AddSpot,
+            layersData,
+            curtPhotoID,
+            AlertCloseLine,
+            AlterLayerHold,
+            EditLayerDone,
+            AlterLayerFill,
+            AlterLayerSelected
+        } = this.props;
 
         let layerGroup = layersData[curtPhotoID];
 
         if (!layerGroup) return null;
 
-        let { layers, holdingLayerID, curtLayerID } = layerGroup;
+        let { layers, holdingLayerID, curtLayerID, selectedLayerID } = layerGroup;
 
         // 得出哪个图层要被标注
         let holdingLayer = null;
 
         layers = layers.map(layer => {
-            let { id, points, lineColor, lineClosed } = layer;
+            let { id, points, lineColor, lineClosed, fill } = layer;
 
             if (holdingLayerID && holdingLayerID === id) holdingLayer = layer
 
@@ -62,12 +80,17 @@ class Board extends Component {
             return (
                 <PaintingLayer {
                     ...{
-                        key: layer.id,
+                        key: id,
                         layerID: id,
                         points,
                         lineColor,
                         fixFirstSpotHit,
-                        lineClosed
+                        lineClosed,
+                        AlterLayerFill,
+                        fill,
+                        AlterLayerHold,
+                        AlterLayerSelected,
+                        selectedLayerID
                     }
                 } />
             )
@@ -98,6 +121,7 @@ class Board extends Component {
                     height={stageHeight}
                     ref="stage"
                     onMouseDown={ev => {
+                        if (ev.target.className === 'Line') return;
                         let { x, y } = this.getPointerPosition();
                         if (firstSpotHit) {
                             //闭合线条并且创建新的图层
@@ -138,7 +162,11 @@ class Board extends Component {
                         <ClosedPrompt {
                             ...{
                                 left,
-                                top
+                                top,
+                                EditLayerDone,
+                                holdingLayerID,
+                                layerName: holdingLayer.layerName || '',
+                                attr: holdingLayer.attr || ''
                             }
                         } />
                     ) : null
@@ -175,8 +203,19 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(action)
         },
         AlterLayerHold(holdingLayerID) {
-            console.log('11111111', holdingLayerID)
             const action = alterLayerHold(holdingLayerID)
+            dispatch(action)
+        },
+        EditLayerDone(editLayerID, layerName, attr) {
+            const action = editLayerDone(editLayerID, layerName, attr)
+            dispatch(action)
+        },
+        AlterLayerFill(fillLayerID, isFill) {
+            const action = alterLayerFill(fillLayerID, isFill)
+            dispatch(action)
+        },
+        AlterLayerSelected(selectedLayerID) {
+            const action = alterLayerSelected(selectedLayerID)
             dispatch(action)
         }
     }

@@ -1,14 +1,23 @@
 import React, { Component } from 'react';
 import { Layer, Circle, Line } from 'react-konva';
 export default class PaintingLayer extends Component {
- // constructor(props) {
- //  super(props);
 
- // }
  render() {
-  let { points, lineColor, fixFirstSpotHit, lineClosed } = this.props;
+  let {
+   points,
+   layerID,
+   lineColor,
+   fixFirstSpotHit,
+   lineClosed,
+   fill,
+   AlterLayerFill,
+   AlterLayerSelected,
+   AlterLayerHold,
+   selectedLayerID,
+  } = this.props;
 
   let linePoints = [];
+
   points.forEach(point => (
    linePoints.push(point.x, point.y)
   ))
@@ -39,9 +48,35 @@ export default class PaintingLayer extends Component {
       stroke: lineColor,
       strokeWidth: 4,
       closed: lineClosed,
-      fill: lineClosed ? 'red' : null
-     }
-    } />
+      fill: fill || selectedLayerID === layerID ? 'rgba(255,0,0,0.3)' : null
+     }}
+
+    />
+    {
+     lineClosed ? (
+      <Line
+       {...{
+        points: [...linePoints, linePoints[0], linePoints[1]],
+        strokeWidth: 14,
+        stroke: 'red',
+        opacity: 0
+       }}
+
+       onMouseOver={ev => {
+        AlterLayerFill(layerID, true);
+       }}
+       onMouseOut={ev => {
+        AlterLayerFill(layerID, false);
+       }}
+
+       onClick={ev => AlterLayerSelected(layerID)}
+
+       onDblClick={ev => { AlterLayerHold(layerID) }}
+
+      />
+     ) : null
+
+    }
     {pointsComp}
    </Layer>
   )
