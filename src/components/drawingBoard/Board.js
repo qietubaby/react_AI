@@ -106,7 +106,8 @@ class Board extends Component {
                         overPointIndex,
                         MovePoint,
                         stageWidth,
-                        stageHeight
+                        stageHeight,
+                        curtLayerID
                     }
                 } />
             )
@@ -138,7 +139,14 @@ class Board extends Component {
                     height={stageHeight}
                     ref="stage"
                     onMouseDown={ev => {
-                        if (ev.target.className === 'Line') return;
+
+                        let { className } = ev.target
+                        if (className === 'Line') return;
+                        if (selectedLayerID && className === 'Image') {
+                            console.log(selectedLayerID)
+                            AlterLayerSelected(null)
+                            return
+                        }
                         let { x, y } = this.getPointerPosition();
 
                         // overPointIndex 【再次】 等于 0 和 点的数量大于2的时候就可以闭合了
@@ -252,7 +260,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(action)
         },
         MovePoint(pointMoveLayerID, pointIndx, pointX, pointY) {
-            console.log(pointMoveLayerID, pointIndx, pointX, pointY)
+
             const action = movePoint(pointMoveLayerID, pointIndx, pointX, pointY)
             dispatch(action)
         }

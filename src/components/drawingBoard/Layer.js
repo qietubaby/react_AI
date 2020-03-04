@@ -22,7 +22,8 @@ export default class PaintingLayer extends Component {
    overPointIndex,
    MovePoint,
    stageWidth,
-   stageHeight
+   stageHeight,
+   curtLayerID
   } = this.props;
 
   let linePoints = [];
@@ -32,51 +33,55 @@ export default class PaintingLayer extends Component {
   ))
 
   let pointsComp = null;
-  pointsComp = points.map((point, i) => {
-   return (
-    <Circle
-     {...{
-      key: i,
-      x: point.x,
-      y: point.y,
-      radius: overPointIndex === i ? 8 : 6,
-      fill: overPointIndex === 0 && i === 0 && !lineClosed ? null : '#fff',
-      stroke: i === 0 ? 'red' : 'black',
-      strokeWidth: 3,
-      draggable: true
-     }}
-     onMouseOver={ev => fixSpotHitIndex(i)}
-     onMouseOut={ev => fixSpotHitIndex(null)}
-     onDragMove={ev => {
-      let { x, y } = ev.target.attrs;
 
-      if (x < dragLimitControl || y < dragLimitControl || x > stageWidth || y > stageHeight) return;
-      MovePoint(layerID, i, x, y)
-     }}
-     dragBoundFunc={
-      ({ x, y }) => {
+  if (selectedLayerID === layerID || curtLayerID === layerID) {
+   pointsComp = points.map((point, i) => {
+    return (
+     <Circle
+      {...{
+       key: i,
+       x: point.x,
+       y: point.y,
+       radius: overPointIndex === i ? 8 : 6,
+       fill: overPointIndex === 0 && i === 0 && !lineClosed ? null : '#fff',
+       stroke: i === 0 ? 'red' : 'black',
+       strokeWidth: 3,
+       draggable: true
+      }}
+      onMouseOver={ev => fixSpotHitIndex(i)}
+      onMouseOut={ev => fixSpotHitIndex(null)}
+      onDragMove={ev => {
+       let { x, y } = ev.target.attrs;
 
-       if (x > stageWidth - dragLimitControl) {
-        x = stageWidth - dragLimitControl;
+       if (x < dragLimitControl || y < dragLimitControl || x > stageWidth || y > stageHeight) return;
+       MovePoint(layerID, i, x, y)
+      }}
+      dragBoundFunc={
+       ({ x, y }) => {
+
+        if (x > stageWidth - dragLimitControl) {
+         x = stageWidth - dragLimitControl;
+        }
+
+        if (x < dragLimitControl) {
+         x = dragLimitControl;
+        }
+        if (y > stageHeight - dragLimitControl) {
+         y = stageHeight - dragLimitControl;
+        }
+
+        if (y < dragLimitControl) {
+         y = dragLimitControl;
+        }
+
+        return { x, y }
        }
-
-       if (x < dragLimitControl) {
-        x = dragLimitControl;
-       }
-       if (y > stageHeight - dragLimitControl) {
-        y = stageHeight - dragLimitControl;
-       }
-
-       if (y < dragLimitControl) {
-        y = dragLimitControl;
-       }
-
-       return { x, y }
       }
-     }
-    />
-   )
-  })
+     />
+    )
+   })
+  }
+
   return (
    <Layer>
     <Line {
