@@ -11,7 +11,9 @@ import {
     alterLayerHold,
     editLayerDone,
     alterLayerFill,
-    alterLayerSelected
+    alterLayerSelected,
+    undo,
+    deleteLayer
 } from './store/actionCreators.js';
 import PaintingLayer from './Layer'
 import ClosedPrompt from './ClosedPrompt';
@@ -46,6 +48,7 @@ class Board extends Component {
     }
 
     render() {
+
         let { stageWidth, stageHeight, fixFirstSpotHit } = this;
 
         let { firstSpotHit } = this.state;
@@ -59,7 +62,9 @@ class Board extends Component {
             AlterLayerHold,
             EditLayerDone,
             AlterLayerFill,
-            AlterLayerSelected
+            AlterLayerSelected,
+            Undo,
+            DeleteLayer
         } = this.props;
 
         let layerGroup = layersData[curtPhotoID];
@@ -116,6 +121,7 @@ class Board extends Component {
         }
         return (
             <div className="fl" >
+                <div onClick={DeleteLayer}>测试测试啊</div>
                 <Stage
                     width={stageWidth}
                     height={stageHeight}
@@ -124,6 +130,7 @@ class Board extends Component {
                         if (ev.target.className === 'Line') return;
                         let { x, y } = this.getPointerPosition();
                         if (firstSpotHit) {
+
                             //闭合线条并且创建新的图层
                             AlertCloseLine(true)
 
@@ -166,7 +173,10 @@ class Board extends Component {
                                 EditLayerDone,
                                 holdingLayerID,
                                 layerName: holdingLayer.layerName || '',
-                                attr: holdingLayer.attr || ''
+                                attr: holdingLayer.attr || '',
+                                everDone: holdingLayer.everDone,
+                                undo: Undo,
+                                DeleteLayer
                             }
                         } />
                     ) : null
@@ -216,6 +226,15 @@ const mapDispatchToProps = (dispatch) => {
         },
         AlterLayerSelected(selectedLayerID) {
             const action = alterLayerSelected(selectedLayerID)
+            dispatch(action)
+        },
+        Undo(undoLayerID) {
+            const action = undo(undoLayerID)
+            dispatch(action)
+        },
+        DeleteLayer(deleteLayerID) {
+
+            const action = deleteLayer(deleteLayerID)
             dispatch(action)
         }
     }

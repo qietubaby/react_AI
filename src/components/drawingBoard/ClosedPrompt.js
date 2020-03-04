@@ -29,7 +29,14 @@ export default class ClosedPrompt extends Component {
 
   let { editDone } = this;
   let { layerName, attr } = this.state;
-  let { left, top } = this.props;
+  let { left,
+   top,
+   everDone,
+   undo,
+   holdingLayerID,
+   DeleteLayer
+
+  } = this.props;
 
   return (
    <div className="closedPrompt" style={{ top, left }}>
@@ -51,7 +58,18 @@ export default class ClosedPrompt extends Component {
 
     </textarea>
     <button onClick={editDone}>done</button>
-    <button>delete</button>
+    {
+     !everDone ? (
+      <button onClick={(ev) => undo(holdingLayerID)}>undo</button>
+     ) : null
+    }
+
+    <button onClick={(ev) => { DeleteLayer(holdingLayerID) }}>delete</button>
+    {
+     everDone ? (
+      <button>cancel</button>
+     ) : null
+    }
    </div>
   )
  }

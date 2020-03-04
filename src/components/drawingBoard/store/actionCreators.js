@@ -90,6 +90,25 @@ export const alterLayerSelected = (selectedLayerID) => (dispatch, getState) => {
  });
 }
 
+export const undo = (undoLayerID) => (dispatch, getState) => {
+ let curtPhotoID = getState().photos.curtPhoto.id;
+ dispatch({
+  type: actionTypes.UNDO,
+  undoLayerID,
+  curtPhotoID
+ });
+}
+
+export const deleteLayer = (deleteLayerID) => (dispatch, getState) => {
+ let curtPhotoID = getState().photos.curtPhoto.id;
+
+ dispatch({
+  type: actionTypes.DELETE_LAYER,
+  deleteLayerID,
+  curtPhotoID
+ });
+}
+
 
 
 
