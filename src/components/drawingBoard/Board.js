@@ -23,19 +23,22 @@ class Board extends Component {
 
         // 第一个点有没有被碰到，用来判断是否闭合线
         this.state = {
-            firstSpotHit: false
+
+
+            // 记录点的索引，碰上第一个点就代表闭合
+            overPointIndex: null
         }
 
 
         this.stageWidth = 760;
         this.stageHeight = 500;
 
-        this.fixFirstSpotHit = this.fixFirstSpotHit.bind(this);
+        this.fixSpotHitIndex = this.fixSpotHitIndex.bind(this);
     }
 
-    fixFirstSpotHit(hasHit) {
+    fixSpotHitIndex(index) {
         this.setState({
-            firstSpotHit: hasHit
+            overPointIndex: index
         })
     }
 
@@ -49,9 +52,9 @@ class Board extends Component {
 
     render() {
 
-        let { stageWidth, stageHeight, fixFirstSpotHit } = this;
+        let { stageWidth, stageHeight, fixSpotHitIndex } = this;
 
-        let { firstSpotHit } = this.state;
+        let { overPointIndex } = this.state;
 
         let {
             drewImage,
@@ -75,11 +78,13 @@ class Board extends Component {
 
         // 得出哪个图层要被标注
         let holdingLayer = null;
+        let curtLayer = null;
 
         layers = layers.map(layer => {
             let { id, points, lineColor, lineClosed, fill } = layer;
 
             if (holdingLayerID && holdingLayerID === id) holdingLayer = layer
+            if (curtLayerID && curtLayerID === id) curtLayer = layer
 
 
             return (
@@ -89,13 +94,14 @@ class Board extends Component {
                         layerID: id,
                         points,
                         lineColor,
-                        fixFirstSpotHit,
                         lineClosed,
                         AlterLayerFill,
                         fill,
                         AlterLayerHold,
                         AlterLayerSelected,
-                        selectedLayerID
+                        selectedLayerID,
+                        fixSpotHitIndex,
+                        overPointIndex
                     }
                 } />
             )
@@ -129,7 +135,7 @@ class Board extends Component {
                     onMouseDown={ev => {
                         if (ev.target.className === 'Line') return;
                         let { x, y } = this.getPointerPosition();
-                        if (firstSpotHit) {
+                        if (overPointIndex === 0 && curtLayer.points.length > 2) {
 
                             //闭合线条并且创建新的图层
                             AlertCloseLine(true)

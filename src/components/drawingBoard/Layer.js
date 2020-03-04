@@ -7,13 +7,14 @@ export default class PaintingLayer extends Component {
    points,
    layerID,
    lineColor,
-   fixFirstSpotHit,
+   fixSpotHitIndex,
    lineClosed,
    fill,
    AlterLayerFill,
    AlterLayerSelected,
    AlterLayerHold,
    selectedLayerID,
+   overPointIndex
   } = this.props;
 
   let linePoints = [];
@@ -30,13 +31,13 @@ export default class PaintingLayer extends Component {
       key: i,
       x: point.x,
       y: point.y,
-      radius: 6,
-      fill: '#fff',
-      stroke: 'black',
+      radius: overPointIndex === i ? 8 : 6,
+      fill: overPointIndex === 0 && i === 0 && !lineClosed ? null : '#fff',
+      stroke: i === 0 ? 'red' : 'black',
       strokeWidth: 3
      }}
-     onMouseOver={ev => fixFirstSpotHit(true)}
-     onMouseOut={ev => fixFirstSpotHit(false)}
+     onMouseOver={ev => fixSpotHitIndex(i)}
+     onMouseOut={ev => fixSpotHitIndex(null)}
     />
    )
   })
