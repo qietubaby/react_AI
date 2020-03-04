@@ -109,6 +109,19 @@ export const deleteLayer = (deleteLayerID) => (dispatch, getState) => {
  });
 }
 
+export const movePoint = (pointMoveLayerID, pointIndx, pointX, pointY) => (dispatch, getState) => {
+ let curtPhotoID = getState().photos.curtPhoto.id;
+ dispatch({
+  type: actionTypes.MOVE_POINT,
+  pointMoveLayerID,
+  curtPhotoID,
+  pointIndx,
+  pointX,
+  pointY
+ })
+
+}
+
 
 
 

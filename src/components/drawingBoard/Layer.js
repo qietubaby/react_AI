@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { Layer, Circle, Line } from 'react-konva';
 export default class PaintingLayer extends Component {
+ constructor(props) {
+  super(props);
+  this.dragLimitControl = 8
+ }
 
  render() {
+  let { dragLimitControl } = this;
   let {
    points,
    layerID,
@@ -14,7 +19,10 @@ export default class PaintingLayer extends Component {
    AlterLayerSelected,
    AlterLayerHold,
    selectedLayerID,
-   overPointIndex
+   overPointIndex,
+   MovePoint,
+   stageWidth,
+   stageHeight
   } = this.props;
 
   let linePoints = [];
@@ -34,10 +42,38 @@ export default class PaintingLayer extends Component {
       radius: overPointIndex === i ? 8 : 6,
       fill: overPointIndex === 0 && i === 0 && !lineClosed ? null : '#fff',
       stroke: i === 0 ? 'red' : 'black',
-      strokeWidth: 3
+      strokeWidth: 3,
+      draggable: true
      }}
      onMouseOver={ev => fixSpotHitIndex(i)}
      onMouseOut={ev => fixSpotHitIndex(null)}
+     onDragMove={ev => {
+      let { x, y } = ev.target.attrs;
+
+      if (x < dragLimitControl || y < dragLimitControl || x > stageWidth || y > stageHeight) return;
+      MovePoint(layerID, i, x, y)
+     }}
+     dragBoundFunc={
+      ({ x, y }) => {
+
+       if (x > stageWidth - dragLimitControl) {
+        x = stageWidth - dragLimitControl;
+       }
+
+       if (x < dragLimitControl) {
+        x = dragLimitControl;
+       }
+       if (y > stageHeight - dragLimitControl) {
+        y = stageHeight - dragLimitControl;
+       }
+
+       if (y < dragLimitControl) {
+        y = dragLimitControl;
+       }
+
+       return { x, y }
+      }
+     }
     />
    )
   })
@@ -49,7 +85,9 @@ export default class PaintingLayer extends Component {
       stroke: lineColor,
       strokeWidth: 4,
       closed: lineClosed,
-      fill: fill || selectedLayerID === layerID ? 'rgba(255,0,0,0.3)' : null
+      fill: fill || selectedLayerID === layerID ? 'rgba(255,0,0,0.3)' : null,
+
+      lineJone: 'round'
      }}
 
     />

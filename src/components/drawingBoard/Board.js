@@ -13,7 +13,8 @@ import {
     alterLayerFill,
     alterLayerSelected,
     undo,
-    deleteLayer
+    deleteLayer,
+    movePoint
 } from './store/actionCreators.js';
 import PaintingLayer from './Layer'
 import ClosedPrompt from './ClosedPrompt';
@@ -67,7 +68,8 @@ class Board extends Component {
             AlterLayerFill,
             AlterLayerSelected,
             Undo,
-            DeleteLayer
+            DeleteLayer,
+            MovePoint
         } = this.props;
 
         let layerGroup = layersData[curtPhotoID];
@@ -101,7 +103,10 @@ class Board extends Component {
                         AlterLayerSelected,
                         selectedLayerID,
                         fixSpotHitIndex,
-                        overPointIndex
+                        overPointIndex,
+                        MovePoint,
+                        stageWidth,
+                        stageHeight
                     }
                 } />
             )
@@ -127,7 +132,7 @@ class Board extends Component {
         }
         return (
             <div className="fl" >
-                <div onClick={DeleteLayer}>测试测试啊</div>
+
                 <Stage
                     width={stageWidth}
                     height={stageHeight}
@@ -135,6 +140,8 @@ class Board extends Component {
                     onMouseDown={ev => {
                         if (ev.target.className === 'Line') return;
                         let { x, y } = this.getPointerPosition();
+
+                        // overPointIndex 【再次】 等于 0 和 点的数量大于2的时候就可以闭合了
                         if (overPointIndex === 0 && curtLayer.points.length > 2) {
 
                             //闭合线条并且创建新的图层
@@ -145,6 +152,7 @@ class Board extends Component {
 
                             //AddTempLayer(curtPhotoID)
                         } else {
+                            if (ev.target.className === 'Circle') return;
                             AddSpot(x, y)
                         }
 
@@ -241,6 +249,11 @@ const mapDispatchToProps = (dispatch) => {
         DeleteLayer(deleteLayerID) {
 
             const action = deleteLayer(deleteLayerID)
+            dispatch(action)
+        },
+        MovePoint(pointMoveLayerID, pointIndx, pointX, pointY) {
+            console.log(pointMoveLayerID, pointIndx, pointX, pointY)
+            const action = movePoint(pointMoveLayerID, pointIndx, pointX, pointY)
             dispatch(action)
         }
     }

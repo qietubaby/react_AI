@@ -18,3 +18,6 @@ export const ALTER_LAYER_SELECTED = 'EDIT_LAYER_SELECTED/label-case/Board';
 export const UNDO = 'UNDO/label-case/Board';
 export const DELETE_LAYER = 'DELETE_LAYER/label-case/Board';
 export const CANCEL_ALTER_LAYER = 'CANCEL_ALTER_LAYER/label-case/Board';
+
+
+export const MOVE_POINT = 'MOVE_POINT/label-case/Board';
