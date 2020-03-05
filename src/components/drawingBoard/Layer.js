@@ -3,7 +3,9 @@ import { Layer, Circle, Line } from 'react-konva';
 export default class PaintingLayer extends Component {
  constructor(props) {
   super(props);
-  this.dragLimitControl = 8
+  this.dragLimitControl = 8;
+  this.oriPoints = null;
+  this.oriLinePoints = null;
  }
 
  render() {
@@ -100,15 +102,19 @@ export default class PaintingLayer extends Component {
 
      onDragStart={ev => {
 
+
       if (!this.oriPoints) {
-       this.oriPoints = points;
-       this.oriLinePoints = linePoints;
+
+       this.oriPoints = points; // 记录初始的点的位置 
+       this.oriLinePoints = linePoints;// 记录初始的点的位置 
       }
      }}
 
+     // 重点是记录第一次图形的位置，在这个基础位置上加上移动的距离，而不是直接使用points加上移动的距离。
+
      onDragMove={ev => {
 
-      let { x, y, points } = ev.target.attrs;
+      let { x, y, points } = ev.target.attrs; // x y 总是记录离元素最初的位置的距离
 
       let newPointsArr = this.oriPoints.map((point, i) => {
 
