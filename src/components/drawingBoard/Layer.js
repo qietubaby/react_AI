@@ -21,6 +21,7 @@ export default class PaintingLayer extends Component {
    selectedLayerID,
    overPointIndex,
    MovePoint,
+   MoveLayer,
    stageWidth,
    stageHeight,
    curtLayerID
@@ -86,14 +87,43 @@ export default class PaintingLayer extends Component {
    <Layer>
     <Line {
      ...{
-      points: linePoints,
+      points: this.oriLinePoints || linePoints,
       stroke: lineColor,
       strokeWidth: 4,
       closed: lineClosed,
       fill: fill || selectedLayerID === layerID ? 'rgba(255,0,0,0.3)' : null,
-
-      lineJone: 'round'
+      listening: selectedLayerID === layerID ? true : false,
+      lineJoin: 'round',
+      draggable: true
      }}
+     onDblClick={ev => { AlterLayerHold(layerID) }}
+
+     onDragStart={ev => {
+
+      if (!this.oriPoints) {
+       this.oriPoints = points;
+       this.oriLinePoints = linePoints;
+      }
+     }}
+
+     onDragMove={ev => {
+
+      let { x, y, points } = ev.target.attrs;
+
+      let newPointsArr = this.oriPoints.map((point, i) => {
+
+       return {
+        x: point.x + x,
+        y: point.y + y
+       }
+
+      });
+
+      MoveLayer(newPointsArr, layerID);
+
+     }}
+
+
 
     />
     {

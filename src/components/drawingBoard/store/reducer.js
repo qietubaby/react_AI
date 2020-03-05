@@ -26,8 +26,9 @@ export default (state = initState, action) => {
     undoLayerID,
     deleteLayerID,
     pointMoveLayerID,
-    pointIndx
-
+    pointIndx,
+    moveLayerID,
+    points
   } = action
   let { layersData } = state;
   let layerGroup = {}
@@ -197,6 +198,22 @@ export default (state = initState, action) => {
 
           pt.x = pointX;
           pt.y = pointY;
+        }
+
+        return layer
+      })
+      return {
+        ...state, layersData: {
+          ...layersData,
+          [curtPhotoID]: { ...layerGroup, layers }
+        }
+      }
+
+
+    case actionTypes.MOVE_LAYER:
+      layers = layers.map((layer, i) => {
+        if (layer.id === moveLayerID) {
+          layer.points = points;
         }
 
         return layer

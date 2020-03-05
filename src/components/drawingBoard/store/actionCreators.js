@@ -122,6 +122,16 @@ export const movePoint = (pointMoveLayerID, pointIndx, pointX, pointY) => (dispa
 
 }
 
+export const moveLayer = (points, moveLayerID) => (dispatch, getState) => {
+ let curtPhotoID = getState().photos.curtPhoto.id;
+ dispatch({
+  type: actionTypes.MOVE_LAYER,
+  moveLayerID,
+  points,
+  curtPhotoID
+ })
+}
+
 
 
 

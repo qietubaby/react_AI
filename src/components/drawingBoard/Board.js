@@ -14,7 +14,8 @@ import {
     alterLayerSelected,
     undo,
     deleteLayer,
-    movePoint
+    movePoint,
+    moveLayer
 } from './store/actionCreators.js';
 import PaintingLayer from './Layer'
 import ClosedPrompt from './ClosedPrompt';
@@ -69,7 +70,8 @@ class Board extends Component {
             AlterLayerSelected,
             Undo,
             DeleteLayer,
-            MovePoint
+            MovePoint,
+            MoveLayer
         } = this.props;
 
         let layerGroup = layersData[curtPhotoID];
@@ -83,6 +85,8 @@ class Board extends Component {
         let curtLayer = null;
 
         layers = layers.map(layer => {
+
+
             let { id, points, lineColor, lineClosed, fill } = layer;
 
             if (holdingLayerID && holdingLayerID === id) holdingLayer = layer
@@ -105,6 +109,7 @@ class Board extends Component {
                         fixSpotHitIndex,
                         overPointIndex,
                         MovePoint,
+                        MoveLayer,
                         stageWidth,
                         stageHeight,
                         curtLayerID
@@ -112,6 +117,8 @@ class Board extends Component {
                 } />
             )
         })
+
+
 
 
         // 计算出 ClosedPrompt 的 left 和 top
@@ -262,6 +269,10 @@ const mapDispatchToProps = (dispatch) => {
         MovePoint(pointMoveLayerID, pointIndx, pointX, pointY) {
 
             const action = movePoint(pointMoveLayerID, pointIndx, pointX, pointY)
+            dispatch(action)
+        },
+        MoveLayer(points, moveLayerID) {
+            const action = moveLayer(points, moveLayerID)
             dispatch(action)
         }
     }
