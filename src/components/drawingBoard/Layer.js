@@ -5,11 +5,11 @@ export default class PaintingLayer extends Component {
   super(props);
   this.dragLimitControl = 8;
   this.oriPoints = null;
-  this.oriLinePoints = null;
+  this.newOriPoints = null;
  }
 
  render() {
-  let { dragLimitControl } = this;
+  let { dragLimitControl, oriPoints } = this;
   let {
    points,
    layerID,
@@ -35,6 +35,15 @@ export default class PaintingLayer extends Component {
    linePoints.push(point.x, point.y)
   ))
 
+  let oriLinePoints = null;
+  if (oriPoints) {
+   oriLinePoints = []
+   oriPoints.forEach(point => (
+    oriLinePoints.push(point.x, point.y)
+   ))
+  }
+
+
   let pointsComp = null;
 
   if (selectedLayerID === layerID || curtLayerID === layerID) {
@@ -53,10 +62,23 @@ export default class PaintingLayer extends Component {
       }}
       onMouseOver={ev => fixSpotHitIndex(i)}
       onMouseOut={ev => fixSpotHitIndex(null)}
+
+      onDragStart={ev => {
+       if (this.oriPoints) {
+        this.newOriPoints = points.slice()
+       }
+      }}
+
       onDragMove={ev => {
        let { x, y } = ev.target.attrs;
 
        if (x < dragLimitControl || y < dragLimitControl || x > stageWidth || y > stageHeight) return;
+
+       if (oriPoints) {
+        oriPoints[i].x = x - this.newOriPoints[i].x + oriPoints[i].x
+        oriPoints[i].y = y - this.newOriPoints[i].y + oriPoints[i].y
+       }
+
        MovePoint(layerID, i, x, y)
       }}
       dragBoundFunc={
@@ -89,7 +111,7 @@ export default class PaintingLayer extends Component {
    <Layer>
     <Line {
      ...{
-      points: this.oriLinePoints || linePoints,
+      points: oriLinePoints || linePoints,
       stroke: lineColor,
       strokeWidth: 4,
       closed: lineClosed,
@@ -101,12 +123,8 @@ export default class PaintingLayer extends Component {
      onDblClick={ev => { AlterLayerHold(layerID) }}
 
      onDragStart={ev => {
-
-
       if (!this.oriPoints) {
-
-       this.oriPoints = points; // 记录初始的点的位置 
-       this.oriLinePoints = linePoints;// 记录初始的点的位置 
+       this.oriPoints = points.slice(); // 记录初始的点的位置 
       }
      }}
 
