@@ -29,17 +29,21 @@ export default class PaintingLayer extends Component {
    curtLayerID
   } = this.props;
 
-  let linePoints = [];
 
+  // linePoints会随着图形的位置而改变
+  let linePoints = [];
   points.forEach(point => (
    linePoints.push(point.x, point.y)
   ))
 
+
+
+  // oriLinePoints始终不会变，一直都是初始的位置，除非图形移动
   let oriLinePoints = null;
   if (oriPoints) {
    oriLinePoints = []
    oriPoints.forEach(point => (
-    oriLinePoints.push(point.x, point.y)
+    oriLinePoints.push(point.x, point.y)  // oriPoints一旦改动，oriLinePoints就会跟着变动，线条也会跟着改变
    ))
   }
 
@@ -70,15 +74,17 @@ export default class PaintingLayer extends Component {
       }}
 
       onDragMove={ev => {
+
        let { x, y } = ev.target.attrs;
 
        if (x < dragLimitControl || y < dragLimitControl || x > stageWidth || y > stageHeight) return;
 
+       // 下面这句话是修复图形移动后，再次拖动点图形不跟着改变的bug
+       // 如果 oriPoints 有值，代表图形已经发生了移动，就要去重置 oriPoints的值
        if (oriPoints) {
         oriPoints[i].x = x - this.newOriPoints[i].x + oriPoints[i].x
         oriPoints[i].y = y - this.newOriPoints[i].y + oriPoints[i].y
        }
-
        MovePoint(layerID, i, x, y)
       }}
       dragBoundFunc={
@@ -110,6 +116,7 @@ export default class PaintingLayer extends Component {
   return (
    <Layer>
     <Line {
+
      ...{
       points: oriLinePoints || linePoints,
       stroke: lineColor,
@@ -120,29 +127,29 @@ export default class PaintingLayer extends Component {
       lineJoin: 'round',
       draggable: true
      }}
+
+
+
      onDblClick={ev => { AlterLayerHold(layerID) }}
 
      onDragStart={ev => {
       if (!this.oriPoints) {
-       this.oriPoints = points.slice(); // 记录初始的点的位置 
+       this.oriPoints = points.slice(); //把图形的初始位置存起来 
       }
      }}
 
-     // 重点是记录第一次图形的位置，在这个基础位置上加上移动的距离，而不是直接使用points加上移动的距离。
-
+     // 重点是要存着第一次图形所在的位置，在这个基础位置上加上移动的距离，而不是直接使用points加上移动的距离。
      onDragMove={ev => {
 
       let { x, y, points } = ev.target.attrs; // x y 总是记录离元素最初的位置的距离
 
       let newPointsArr = this.oriPoints.map((point, i) => {
-
        return {
         x: point.x + x,
         y: point.y + y
        }
 
       });
-
       MoveLayer(newPointsArr, layerID);
 
      }}
