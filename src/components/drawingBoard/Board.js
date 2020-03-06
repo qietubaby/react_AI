@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Stage, Layer, Image } from 'react-konva';
+import { Stage, Layer, Rect, Image } from 'react-konva';
 import { connect } from 'react-redux';
 import { getDrewImageBodyInfo } from '../../common/util/KonvaUtil.js';
 import './style.scss';
@@ -15,7 +15,8 @@ import {
     undo,
     deleteLayer,
     movePoint,
-    moveLayer
+    moveLayer,
+    genRect
 } from './store/actionCreators.js';
 import PaintingLayer from './Layer'
 import ClosedPrompt from './ClosedPrompt';
@@ -34,6 +35,10 @@ class Board extends Component {
 
         this.stageWidth = 760;
         this.stageHeight = 500;
+
+        this.dragLimitControl = 8;
+
+        this.clickTime = 0;
 
         this.fixSpotHitIndex = this.fixSpotHitIndex.bind(this);
     }
@@ -71,7 +76,9 @@ class Board extends Component {
             Undo,
             DeleteLayer,
             MovePoint,
-            MoveLayer
+            MoveLayer,
+            shape,
+            GenRect
         } = this.props;
 
         let layerGroup = layersData[curtPhotoID];
@@ -112,7 +119,9 @@ class Board extends Component {
                         MoveLayer,
                         stageWidth,
                         stageHeight,
-                        curtLayerID
+                        curtLayerID,
+                        shape,
+
                     }
                 } />
             )
@@ -156,24 +165,66 @@ class Board extends Component {
                         }
                         let { x, y } = this.getPointerPosition();
 
-                        // overPointIndex 【再次】 等于 0 和 点的数量大于2的时候就可以闭合了
-                        if (overPointIndex === 0 && curtLayer.points.length > 2) {
+                        if (shape === 0) {
+                            // overPointIndex 【再次】 等于 0 和 点的数量大于2的时候就可以闭合了
+                            if (overPointIndex === 0 && curtLayer.points.length > 2) {
 
-                            //闭合线条并且创建新的图层
-                            AlertCloseLine(true)
+                                //闭合线条并且创建新的图层
+                                AlertCloseLine(true)
 
-                            // 闭合后给这个图层添加标注
-                            AlterLayerHold(curtLayerID)
+                                // 闭合后给这个图层添加标注
+                                AlterLayerHold(curtLayerID)
 
-                            //AddTempLayer(curtPhotoID)
-                        } else {
-                            if (ev.target.className === 'Circle') return;
-                            AddSpot(x, y)
+                                //AddTempLayer(curtPhotoID)
+                            } else {
+                                if (ev.target.className === 'Circle') return;
+                                AddSpot(x, y)
+                            }
+                        }
+                        if (shape === 1) {
+
+                            if (this.clickTime === 0) {
+                                if (ev.target.className === 'Circle') return;
+                                GenRect(x, y);
+
+                                this.clickTime++;
+
+                            } else {
+                                alterLayerHold(curtLayerID);
+                                this.clickTime = 0;
+
+                            }
+
                         }
 
+
+
                     }
 
                     }
+
+                    onMouseMove={ev => {
+
+                        if (shape === 0) return;
+
+                        if (holdingLayerID) return;
+
+                        if (this.clickTime !== 1) return;
+
+                        let { x, y } = this.getPointerPosition();
+
+                        if (x < this.dragLimitControl || y < this.dragLimitControl || x > stageWidth || y > stageHeight) return;
+
+                        MovePoint(curtLayerID, 0, x, y);
+
+                        MovePoint(curtLayerID, 1, null, y);
+
+                        MovePoint(curtLayerID, 3, x, null);
+
+
+
+                    }}
+
                 >
                     <Layer>
                         {
@@ -217,9 +268,12 @@ class Board extends Component {
 }
 
 const mapStateToProps = (state) => {
+    let { shape } = state
+
     let { drewImage, layersData } = state.board;
     let { curtPhoto: { id } } = state.photos;
     return {
+        shape,
         drewImage,
         layersData,
         curtPhotoID: id
@@ -273,6 +327,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         MoveLayer(points, moveLayerID) {
             const action = moveLayer(points, moveLayerID)
+            dispatch(action)
+        },
+        GenRect(x, y) {
+            const action = genRect(x, y)
             dispatch(action)
         }
     }

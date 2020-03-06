@@ -26,7 +26,8 @@ export default class PaintingLayer extends Component {
    MoveLayer,
    stageWidth,
    stageHeight,
-   curtLayerID
+   curtLayerID,
+   shape
   } = this.props;
 
 
@@ -86,7 +87,53 @@ export default class PaintingLayer extends Component {
         oriPoints[i].y = y - this.newOriPoints[i].y + oriPoints[i].y
        }
        MovePoint(layerID, i, x, y)
+
+
+
+
+       // 矩形图形  移动点时，其他点的活动状态
+       if (shape === 1) {
+        switch (i) {
+         case 0:
+          MovePoint(layerID, 1, null, y);
+          MovePoint(layerID, 3, x, null);
+          if (oriPoints) {
+           oriPoints[1].y = y - this.newOriPoints[1].y + oriPoints[1].y;
+           oriPoints[3].x = x - this.newOriPoints[3].x + oriPoints[3].x;
+          }
+          break;
+         case 1:
+          MovePoint(layerID, 0, null, y);
+          MovePoint(layerID, 2, x, null);
+          if (oriPoints) {
+           oriPoints[0].y = y - this.newOriPoints[0].y + oriPoints[0].y;
+           oriPoints[2].x = x - this.newOriPoints[2].x + oriPoints[2].x;
+          }
+          break;
+         case 2:
+          MovePoint(layerID, 1, x, null);
+          MovePoint(layerID, 3, null, y);
+          if (oriPoints) {
+           oriPoints[1].x = x - this.newOriPoints[1].x + oriPoints[1].x;
+           oriPoints[3].y = y - this.newOriPoints[3].y + oriPoints[3].y;
+          }
+          break;
+         case 3:
+          MovePoint(layerID, 0, x, null);
+          MovePoint(layerID, 2, null, y);
+          if (oriPoints) {
+           oriPoints[0].x = x - this.newOriPoints[0].x + oriPoints[0].x;
+           oriPoints[2].y = y - this.newOriPoints[2].y + oriPoints[2].y;
+          }
+          break;
+         default:
+
+        }
+       }
+
       }}
+
+
       dragBoundFunc={
        ({ x, y }) => {
 

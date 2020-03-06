@@ -58,7 +58,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         ChangeShape(shape) {
             const action = changeShape(shape)
-            alert(shape)
             dispatch(action)
         }
 

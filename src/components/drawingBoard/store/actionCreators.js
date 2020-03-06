@@ -29,6 +29,19 @@ export const addSpot = (x, y) => (dispatch, getState) => {
  })
 }
 
+// 画矩形
+export const genRect = (x, y) => (dispatch, getState) => {
+
+ dispatch(addSpot(x, y));
+ dispatch(addSpot(x, y));
+ dispatch(addSpot(x, y));
+ dispatch(addSpot(x, y));
+ dispatch(closeLine(true));
+
+
+}
+
+
 // 闭合线条
 export const closeLine = (closed) => (dispatch, getState) => {
 

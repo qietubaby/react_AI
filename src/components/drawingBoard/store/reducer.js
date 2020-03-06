@@ -195,9 +195,14 @@ export default (state = initState, action) => {
       layers = layers.map((layer, i) => {
         if (layer.id === pointMoveLayerID) {
           let pt = layer.points[pointIndx]
+          if (pointX !== null) {
+            pt.x = pointX;
+          }
+          if (pointY !== null) {
+            pt.y = pointY;
+          }
 
-          pt.x = pointX;
-          pt.y = pointY;
+
         }
 
         return layer
