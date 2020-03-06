@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import './style.scss';
 
-export default class ToolBox extends Component {
+import { connect } from 'react-redux';
+
+import { changeShape } from './store/actionCreators'
+
+class ToolBox extends Component {
     render() {
+        let { shape, ChangeShape } = this.props;
         return (
             <ul className="toolButton">
                 <li>
@@ -17,12 +22,16 @@ export default class ToolBox extends Component {
                     <i></i>
                     适应
                 </li>
-                <li>
+                <li className={shape === 0 ? 'active' : ''}
+                    onClick={ev => ChangeShape(0)}
+                >
                     <i></i>
                     点描
 
                 </li>
-                <li>
+                <li className={shape === 1 ? 'active' : ''}
+
+                    onClick={ev => ChangeShape(1)}>
                     <i></i>
                     框选
                 </li>
@@ -35,3 +44,25 @@ export default class ToolBox extends Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+
+    let { shape } = state
+    return {
+        shape
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+
+    return {
+        ChangeShape(shape) {
+            const action = changeShape(shape)
+            alert(shape)
+            dispatch(action)
+        }
+
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ToolBox)

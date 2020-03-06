@@ -1,0 +1,1 @@
+export const CHANGE_SHAPE = 'CHANGE_SHAPE/label-case/ToolBox';
