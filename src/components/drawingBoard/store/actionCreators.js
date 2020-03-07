@@ -107,12 +107,14 @@ export const alterLayerHold = (holdingLayerID) => (dispatch, getState) => {
 // 写入标注name和attr完成标注
 export const editLayerDone = (editLayerID, layerName, attr) => (dispatch, getState) => {
  let curtPhotoID = getState().photos.curtPhoto.id;
+ let { shape } = getState()
  dispatch({
   type: actionTypes.EDIT_LAYER_DONE,
   editLayerID,
   curtPhotoID,
   layerName,
-  attr
+  attr,
+  shapeType: shape
  })
  dispatch(addTempLayer(curtPhotoID));
 }

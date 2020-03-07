@@ -28,7 +28,8 @@ export default (state = initState, action) => {
     pointMoveLayerID,
     pointIndx,
     moveLayerID,
-    points
+    points,
+    shapeType
   } = action
   let { layersData } = state;
   let layerGroup = {}
@@ -61,7 +62,9 @@ export default (state = initState, action) => {
               lineClosed: false,
 
               //用来判断标注有没有完成
-              everDone: false
+              everDone: false,
+
+              shapeType: null
             }],
             //当前图层的id
             curtLayerID: tempLayerID,
@@ -118,6 +121,7 @@ export default (state = initState, action) => {
           layer.layerName = layerName;
           layer.attr = attr
           layer.everDone = true;
+          layer.shapeType = shapeType
         }
         return layer;
       });

@@ -79,7 +79,10 @@ class Board extends Component {
             MoveLayer,
             shape,
             GenRect
+
         } = this.props;
+
+
 
         let layerGroup = layersData[curtPhotoID];
 
@@ -94,7 +97,7 @@ class Board extends Component {
         layers = layers.map(layer => {
 
 
-            let { id, points, lineColor, lineClosed, fill } = layer;
+            let { id, points, lineColor, lineClosed, fill, shapeType } = layer;
 
             if (holdingLayerID && holdingLayerID === id) holdingLayer = layer
             if (curtLayerID && curtLayerID === id) curtLayer = layer
@@ -121,7 +124,7 @@ class Board extends Component {
                         stageHeight,
                         curtLayerID,
                         shape,
-
+                        shapeType
                     }
                 } />
             )
@@ -148,6 +151,7 @@ class Board extends Component {
             imageBodyInfo = getDrewImageBodyInfo(imgWidth, imgHeight, stageWidth, stageHeight)
         }
         return (
+
             <div className="fl" >
 
                 <Stage
@@ -275,6 +279,7 @@ class Board extends Component {
 }
 
 const mapStateToProps = (state) => {
+
     let { shape } = state
 
     let { drewImage, layersData } = state.board;
