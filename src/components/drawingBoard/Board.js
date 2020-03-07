@@ -59,11 +59,13 @@ class Board extends Component {
 
     render() {
 
-        let { stageWidth, stageHeight, fixSpotHitIndex } = this;
+        let { fixSpotHitIndex } = this;
 
         let { overPointIndex } = this.state;
 
         let {
+            stageWidth,
+            stageHeight,
             drewImage,
             AddSpot,
             layersData,
@@ -284,11 +286,14 @@ const mapStateToProps = (state) => {
 
     let { drewImage, layersData } = state.board;
     let { curtPhoto: { id } } = state.photos;
+    let { stage: { stageWidth, stageHeight } } = state.board
     return {
         shape,
         drewImage,
         layersData,
-        curtPhotoID: id
+        curtPhotoID: id,
+        stageWidth,
+        stageHeight
     }
 }
 

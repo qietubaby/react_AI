@@ -1,9 +1,14 @@
 import * as actionTypes from './actionTypes'
 import Konva from 'konva'
+
+let oriStageWidth = 760
+let oriStageHeight = 500
 let initState = {
   drewImage: null,
-  layersData: {
-
+  layersData: {},
+  stage: {
+    stageWidth: oriStageWidth,
+    stageHeight: oriStageHeight
   }
 }
 // reducer
@@ -29,7 +34,10 @@ export default (state = initState, action) => {
     pointIndx,
     moveLayerID,
     points,
-    shapeType
+    shapeType,
+    stageWidth,
+    stageHeight,
+    evoScale
   } = action
   let { layersData } = state;
   let layerGroup = {}
@@ -229,6 +237,23 @@ export default (state = initState, action) => {
       })
       return {
         ...state, layersData: {
+          ...layersData,
+          [curtPhotoID]: { ...layerGroup, layers }
+        }
+      }
+    case actionTypes.ALTER_STAGE:
+      layers = layers.map((layer, i) => {
+
+        layer.points = layer.points.map(({ x, y }) => ({ x: x * evoScale, y: y * evoScale }));
+
+        return layer;
+
+      });
+
+      return {
+        ...state,
+        stage: { stageWidth, stageHeight },
+        layersData: {
           ...layersData,
           [curtPhotoID]: { ...layerGroup, layers }
         }

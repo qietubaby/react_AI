@@ -1,7 +1,10 @@
 import * as actionTypes from './actionTypes'
 
 
-import { hintFinish, finishFirst } from '../../../common/util/Util.js';
+import { hintFinish, finishFirst } from '../../../common/util/Util.js'
+
+let oriStageWidth = 760;
+let oriStageHeight = 500;
 
 export const drewImage = (url) => {
  return (dispatch) => {
@@ -197,6 +200,72 @@ export const moveLayer = (points, moveLayerID) => (dispatch, getState) => {
   points,
   curtPhotoID
  })
+}
+
+export const adaptStage = () => (dispatch, getState) => {
+ let { stageWidth } = getState().board.stage;
+ let curtPhotoID = getState().photos.curtPhoto.id;
+ let evoScale = oriStageWidth / stageWidth;
+ dispatch({
+  type: actionTypes.ALTER_STAGE,
+  stageWidth: oriStageWidth,
+  stageHeight: oriStageHeight,
+  evoScale,
+  curtPhotoID
+ });
+}
+
+
+export const incrementStage = () => (dispatch, getState) => {
+
+ let { stageWidth, stageHeight } = getState().board.stage;
+
+ let curtPhotoID = getState().photos.curtPhoto.id;
+
+ let preWidth = stageWidth;
+
+ stageWidth *= 1.2;
+ stageHeight *= 1.2;
+
+ if (stageWidth > 2760 || stageHeight > 1500) return;
+
+
+ let evoScale = stageWidth / preWidth;
+
+ dispatch({
+  type: actionTypes.ALTER_STAGE,
+  stageWidth,
+  stageHeight,
+  evoScale,
+  curtPhotoID
+ });
+
+}
+
+export const decrementStage = () => (dispatch, getState) => {
+ let { stageWidth, stageHeight } = getState().board.stage;
+
+ let curtPhotoID = getState().photos.curtPhoto.id;
+
+ let preWidth = stageWidth;
+
+ stageWidth /= 1.2;
+ stageHeight /= 1.2;
+
+ if (stageWidth < 760 || stageHeight < 500) {
+  stageWidth = oriStageWidth;
+  stageHeight = oriStageHeight;
+ }
+
+ let evoScale = stageWidth / preWidth;
+ dispatch({
+  type: actionTypes.ALTER_STAGE,
+  stageWidth,
+  stageHeight,
+  evoScale,
+  curtPhotoID
+ });
+
 }
 
 

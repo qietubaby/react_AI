@@ -22,3 +22,5 @@ export const CANCEL_ALTER_LAYER = 'CANCEL_ALTER_LAYER/label-case/Board';
 
 export const MOVE_POINT = 'MOVE_POINT/label-case/Board';
 export const MOVE_LAYER = 'MOVE_LAYER/label-case/Board';
+
+export const ALTER_STAGE = 'ALTER_STAGE/label-case/Board';
