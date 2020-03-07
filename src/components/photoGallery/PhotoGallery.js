@@ -7,6 +7,7 @@ import { actionCreators } from './store';
 import { switchPhoto } from './store/actionCreators';
 
 
+
 class PhotoGallery extends Component {
     componentDidMount() {
         this.props.loadImage(this.props.curtPhoto)
@@ -68,7 +69,7 @@ const mapDispatchToProps = (dispatch) => {
             }
         },
         switchPhoto(photo) {
-            console.log(55555555, photo)
+
             const action = actionCreators.switchPhoto(photo)
             dispatch(action)
 

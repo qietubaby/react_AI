@@ -1,4 +1,8 @@
 import * as actionTypes from './actionTypes'
+
+
+import { hintFinish, finishFirst } from '../../../common/util/Util.js';
+
 export const drewImage = (url) => {
  return (dispatch) => {
   let imgObj = new window.Image();
@@ -81,9 +85,7 @@ export const editLayerDone = (editLayerID, layerName, attr) => (dispatch, getSta
 }
 
 export const alterLayerFill = (fillLayerID, isFill) => (dispatch, getState) => {
-
  let curtPhotoID = getState().photos.curtPhoto.id;
-
  dispatch({
   type: actionTypes.ALTER_LAYER_FILL,
   curtPhotoID,
@@ -95,6 +97,23 @@ export const alterLayerFill = (fillLayerID, isFill) => (dispatch, getState) => {
 
 export const alterLayerSelected = (selectedLayerID) => (dispatch, getState) => {
  let curtPhotoID = getState().photos.curtPhoto.id;
+
+
+
+ let {
+  board: { layersData }
+ } = getState()
+ let layerGroup = layersData[curtPhotoID]
+
+ if (layerGroup) {
+
+  let { holdingLayerID, layers, curtLayerID } = layerGroup;
+  if (holdingLayerID || finishFirst(layers, curtLayerID)) {
+   hintFinish()
+   return;
+  }
+ }
+
 
  dispatch({
   type: actionTypes.ALTER_LAYER_SELECTED,
