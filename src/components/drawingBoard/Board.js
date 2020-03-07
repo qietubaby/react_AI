@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Stage, Layer, Rect, Image } from 'react-konva';
+import { Stage, Layer, Image } from 'react-konva';
 import { connect } from 'react-redux';
 import { getDrewImageBodyInfo } from '../../common/util/KonvaUtil.js';
 import './style.scss';
@@ -158,6 +158,11 @@ class Board extends Component {
 
                         let { className } = ev.target
                         if (className === 'Line') return;
+
+                        //如果没有标注完成不允许添加点
+                        // if (holdingLayerID) return;
+
+
                         if (selectedLayerID && className === 'Image') {
                             console.log(selectedLayerID)
                             AlterLayerSelected(null)
@@ -187,10 +192,12 @@ class Board extends Component {
                                 if (ev.target.className === 'Circle') return;
                                 GenRect(x, y);
 
+                                if (holdingLayerID) return
+
                                 this.clickTime++;
 
                             } else {
-                                alterLayerHold(curtLayerID);
+                                AlterLayerHold(curtLayerID);
                                 this.clickTime = 0;
 
                             }

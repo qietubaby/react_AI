@@ -24,6 +24,25 @@ export const addTempLayer = (curtPhotoID) => ({
 export const addSpot = (x, y) => (dispatch, getState) => {
  let curtPhotoID = getState().photos.curtPhoto.id
  let { curtLayerID } = getState().board.layersData[curtPhotoID]
+
+
+
+ let {
+  board: { layersData }
+ } = getState()
+ let layerGroup = layersData[curtPhotoID]
+
+ if (layerGroup) {
+
+  let { holdingLayerID } = layerGroup;
+  if (holdingLayerID) {
+   hintFinish()
+   return;
+  }
+ }
+
+
+
  dispatch({
   type: actionTypes.ADD_SPOT,
   curtPhotoID,
@@ -35,6 +54,20 @@ export const addSpot = (x, y) => (dispatch, getState) => {
 
 // 画矩形
 export const genRect = (x, y) => (dispatch, getState) => {
+ let curtPhotoID = getState().photos.curtPhoto.id
+ let {
+  board: { layersData }
+ } = getState()
+ let layerGroup = layersData[curtPhotoID]
+
+ if (layerGroup) {
+
+  let { holdingLayerID } = layerGroup;
+  if (holdingLayerID) {
+   hintFinish()
+   return;
+  }
+ }
 
  dispatch(addSpot(x, y));
  dispatch(addSpot(x, y));
