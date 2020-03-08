@@ -108,7 +108,7 @@ export const alterLayerHold = (holdingLayerID) => (dispatch, getState) => {
 }
 
 // 写入标注name和attr完成标注
-export const editLayerDone = (editLayerID, layerName, attr) => (dispatch, getState) => {
+export const editLayerDone = (editLayerID, layerName, attr, everDone) => (dispatch, getState) => {
  let curtPhotoID = getState().photos.curtPhoto.id;
  let { shape } = getState()
  dispatch({
@@ -119,6 +119,8 @@ export const editLayerDone = (editLayerID, layerName, attr) => (dispatch, getSta
   attr,
   shapeType: shape
  })
+ // 仅当第一次完成的时候再去添加一个临时图层，编辑不需要
+ if (everDone) return
  dispatch(addTempLayer(curtPhotoID));
 }
 
@@ -135,9 +137,6 @@ export const alterLayerFill = (fillLayerID, isFill) => (dispatch, getState) => {
 
 export const alterLayerSelected = (selectedLayerID) => (dispatch, getState) => {
  let curtPhotoID = getState().photos.curtPhoto.id;
-
-
-
  let {
   board: { layersData }
  } = getState()
@@ -203,8 +202,9 @@ export const moveLayer = (points, moveLayerID) => (dispatch, getState) => {
 }
 
 export const adaptStage = () => (dispatch, getState) => {
- let { stageWidth } = getState().board.stage;
+
  let curtPhotoID = getState().photos.curtPhoto.id;
+ let { stageWidth } = getState().board.layersData[curtPhotoID].stage;
  let evoScale = oriStageWidth / stageWidth;
  dispatch({
   type: actionTypes.ALTER_STAGE,
@@ -218,9 +218,10 @@ export const adaptStage = () => (dispatch, getState) => {
 
 export const incrementStage = () => (dispatch, getState) => {
 
- let { stageWidth, stageHeight } = getState().board.stage;
+
 
  let curtPhotoID = getState().photos.curtPhoto.id;
+ let { stageWidth, stageHeight } = getState().board.layersData[curtPhotoID].stage;
 
  let preWidth = stageWidth;
 
@@ -243,10 +244,8 @@ export const incrementStage = () => (dispatch, getState) => {
 }
 
 export const decrementStage = () => (dispatch, getState) => {
- let { stageWidth, stageHeight } = getState().board.stage;
-
  let curtPhotoID = getState().photos.curtPhoto.id;
-
+ let { stageWidth, stageHeight } = getState().board.layersData[curtPhotoID].stage;
  let preWidth = stageWidth;
 
  stageWidth /= 1.2;

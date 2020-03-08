@@ -64,8 +64,6 @@ class Board extends Component {
         let { overPointIndex } = this.state;
 
         let {
-            stageWidth,
-            stageHeight,
             drewImage,
             AddSpot,
             layersData,
@@ -90,7 +88,7 @@ class Board extends Component {
 
         if (!layerGroup) return null;
 
-        let { layers, holdingLayerID, curtLayerID, selectedLayerID } = layerGroup;
+        let { layers, holdingLayerID, curtLayerID, selectedLayerID, stage: { stageWidth, stageHeight } } = layerGroup;
 
         // 得出哪个图层要被标注
         let holdingLayer = null;
@@ -286,14 +284,11 @@ const mapStateToProps = (state) => {
 
     let { drewImage, layersData } = state.board;
     let { curtPhoto: { id } } = state.photos;
-    let { stage: { stageWidth, stageHeight } } = state.board
     return {
         shape,
         drewImage,
         layersData,
-        curtPhotoID: id,
-        stageWidth,
-        stageHeight
+        curtPhotoID: id
     }
 }
 

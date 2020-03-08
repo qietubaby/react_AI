@@ -14,14 +14,14 @@ export default class ClosedPrompt extends Component {
  editDone(ev) {
   ev.preventDefault();
   ev.stopPropagation();
-  let { holdingLayerID, EditLayerDone } = this.props;
+  let { holdingLayerID, EditLayerDone, everDone } = this.props;
   let { layerName, attr } = this.state;
   if (!layerName || Number(layerName) === 0) {
    window.alert('你应该填写一个名字');
    return;
   }
 
-  EditLayerDone(holdingLayerID, layerName, attr)
+  EditLayerDone(holdingLayerID, layerName, attr, everDone)
 
  }
 

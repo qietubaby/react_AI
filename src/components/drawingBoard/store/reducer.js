@@ -5,11 +5,7 @@ let oriStageWidth = 760
 let oriStageHeight = 500
 let initState = {
   drewImage: null,
-  layersData: {},
-  stage: {
-    stageWidth: oriStageWidth,
-    stageHeight: oriStageHeight
-  }
+  layersData: {}
 }
 // reducer
 export default (state = initState, action) => {
@@ -77,7 +73,11 @@ export default (state = initState, action) => {
             //当前图层的id
             curtLayerID: tempLayerID,
             holdingLayerID: null,
-            selectedLayerID: null
+            selectedLayerID: null,
+            stage: {
+              stageWidth: oriStageWidth,
+              stageHeight: oriStageHeight
+            }
           }
         }
       }
@@ -252,10 +252,10 @@ export default (state = initState, action) => {
 
       return {
         ...state,
-        stage: { stageWidth, stageHeight },
+
         layersData: {
           ...layersData,
-          [curtPhotoID]: { ...layerGroup, layers }
+          [curtPhotoID]: { ...layerGroup, layers, stage: { stageWidth, stageHeight } }
         }
       }
 
