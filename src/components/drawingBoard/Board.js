@@ -267,7 +267,8 @@ class Board extends Component {
                                 attr: holdingLayer.attr || '',
                                 everDone: holdingLayer.everDone,
                                 undo: Undo,
-                                DeleteLayer
+                                DeleteLayer,
+                                shape: holdingLayer.shapeType === null ? shape : holdingLayer.shapeType
                             }
                         } />
                     ) : null

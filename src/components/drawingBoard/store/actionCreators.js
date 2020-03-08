@@ -108,16 +108,15 @@ export const alterLayerHold = (holdingLayerID) => (dispatch, getState) => {
 }
 
 // 写入标注name和attr完成标注
-export const editLayerDone = (editLayerID, layerName, attr, everDone) => (dispatch, getState) => {
+export const editLayerDone = (editLayerID, layerName, attr, everDone, editLayerShapeType) => (dispatch, getState) => {
  let curtPhotoID = getState().photos.curtPhoto.id;
- let { shape } = getState()
  dispatch({
   type: actionTypes.EDIT_LAYER_DONE,
   editLayerID,
   curtPhotoID,
   layerName,
   attr,
-  shapeType: shape
+  shapeType: editLayerShapeType
  })
  // 仅当第一次完成的时候再去添加一个临时图层，编辑不需要
  if (everDone) return
