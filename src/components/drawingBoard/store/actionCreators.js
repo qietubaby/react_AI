@@ -192,11 +192,14 @@ export const movePoint = (pointMoveLayerID, pointIndx, pointX, pointY) => (dispa
 
 export const moveLayer = (points, moveLayerID) => (dispatch, getState) => {
  let curtPhotoID = getState().photos.curtPhoto.id;
+ let { stageWidth } = getState().board.layersData[curtPhotoID].stage;
+ let evoScale = oriStageWidth / stageWidth;
  dispatch({
   type: actionTypes.MOVE_LAYER,
   moveLayerID,
   points,
-  curtPhotoID
+  curtPhotoID,
+  evoScale
  })
 }
 
@@ -239,6 +242,10 @@ export const incrementStage = () => (dispatch, getState) => {
   evoScale,
   curtPhotoID
  });
+ dispatch({
+  type: actionTypes.MOVE_LAYER
+ })
+
 
 }
 

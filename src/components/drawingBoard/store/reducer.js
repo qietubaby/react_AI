@@ -75,8 +75,8 @@ export default (state = initState, action) => {
             holdingLayerID: null,
             selectedLayerID: null,
             stage: {
-              stageWidth: oriStageWidth,
-              stageHeight: oriStageHeight
+              stageWidth: layerGroup && layerGroup.stage ? layerGroup.stage.stageWidth : oriStageWidth,
+              stageHeight: layerGroup && layerGroup.stage ? layerGroup.stage.stageHeight : oriStageHeight
             }
           }
         }
@@ -241,6 +241,9 @@ export default (state = initState, action) => {
           [curtPhotoID]: { ...layerGroup, layers }
         }
       }
+
+
+
     case actionTypes.ALTER_STAGE:
       layers = layers.map((layer, i) => {
 
